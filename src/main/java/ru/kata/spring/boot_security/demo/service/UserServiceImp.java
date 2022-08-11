@@ -1,22 +1,23 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.List;
 
 @Service
-public class UserServiceImp implements UserDetailsService {
+public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
-
+/*    private BCryptPasswordEncoder encoder;
+    public void setPasswordEncoder(BCryptPasswordEncoder encoder) {
+        this.encoder = encoder;
+    }*/
     @Autowired
     public UserServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -31,7 +32,8 @@ public class UserServiceImp implements UserDetailsService {
         return userRepository.findAll();
     }
     @Transactional
-    public User saveUser(User user){
+    public User saveUser(User user) {
+        user.setPassword(password().encode(user.getPassword()));
         return userRepository.save(user);
     }
     @Transactional
@@ -42,13 +44,11 @@ public class UserServiceImp implements UserDetailsService {
     public User findByName(String name) {
         return userRepository.findByName(name);
     }
-    @Transactional
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByName(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("user not found");
-        }
-        return user;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    public PasswordEncoder password() {
+        return new BCryptPasswordEncoder();
     }
 }
