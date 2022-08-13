@@ -1,27 +1,71 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${user}"></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <title>User page</title>
 </head>
 <body>
 
+<!-- Шапка сайта -->
+<header>
+    <nav class="navbar navbar-expand-xl navbar-dark text-white bg-dark">
 
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse show" id="navbarDark">
+                <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+                <span class="align-middle font-weight-bold mr-1"
+                      th:text="${#authorization.getAuthentication().getPrincipal().getName()}"></span></b>
+                    <span class="align-middle mr-1">with roles:</span>
+                    <span th:each="role : ${#authentication.getAuthorities()}"> <span  th:text=" ${role.getAuthority()}"></span> 
+                    </span>
+                </ul>
+            </div>
 
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-    </tr>
-    <tr>
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.email}"></td>
-    </tr>
-</table>
-<form th:action="@{'/logout'}">
-    <input type="submit" value="Logout"/>
-</form>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-dark text-secondary">Logout</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<div class="container-fluid mt-4 pr-5">
+    <div class="row">
+        <div class="list-group col-2">
+            <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/users" class="list-group-item list-group-item-action border-0 text-primary">Admin</a>
+            <a href="#" class="list-group-item active rounded-sm">User</a>
+        </div>
+        <div class="col-10">
+            <h1 class="pb-2">User information-page</h1>
+            <div class="border rounded">
+                <h4 class="p-3 m-0">About user</h4><hr class="m-0">
+                <div class="p-4">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td th:text="${user.getId()}">id</td>
+                            <td th:text="${user.getName()}">name</td>
+                            <td th:text="${user.getEmail()}">email</td>
+                            <td th:text="${user.getRolesString()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

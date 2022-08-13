@@ -8,7 +8,6 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImp;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
-
 import java.util.List;
 
 @Controller
@@ -26,7 +25,7 @@ public class AdminController {
 
 
     @GetMapping("/admin/users")
-    public String findAll(Model model){
+    public String findAll(Model model) {
         List<User> users = userService.findAll();
         model.addAttribute("users", users);
         return "/admin/users";

@@ -1,31 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create user</title>
+    <title>Users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
+<!-- navigation bar -->
+<header>
+    <nav class="navbar navbar-expand-xl navbar-dark text-white bg-dark">
 
-<form method="post" th:action="@{/admin/user-create}" th:object="${user}">
-    <label for="name">Name</label>
-    <input type="text" th:field="*{name}" id="name" placeholder="Name">
-    <br>
-    <label for="email">Email</label>
-    <input type="text" th:field="*{email}" id="email" placeholder="Email">
-    <br>
-    <label for="password">Email</label>
-    <input type="text" th:field="*{password}" id="password" placeholder="Password">
-    <br>
-    <label>
-        <select size="3" multiple="multiple" name="roles" id="roles">
-            <option disabled>Roles:</option>
-            <option selected value="1">ADMIN</option>
-            <option value="2">USER</option>
-        </select>
-    </label>
-    <br>
-    <input type="submit" value="Create User">
-</form>
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse show" id="navbarDark">
+                <ul class="navbar-nav me-auto mb-2 mb-xl-0">
+                <span class="align-middle font-weight-bold mr-1"
+                      th:text="${#authorization.getAuthentication().getPrincipal().getName()}"></span></b>
+                    <span class="align-middle mr-1">with roles:</span>
+                    <span th:each="role : ${#authentication.getAuthorities()}"> <span
+                            th:text=" ${role.getAuthority()}"></span> 
+                    </span>
+                </ul>
+            </div>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-dark text-secondary">Logout</button>
+            </form>
+        </div>
+    </nav>
+</header>
+<div class="container-fluid mt-4 pr-5">
+    <div class="container-fluid mt-4 pr-5">
+        <div class="row">
+            <div class="list-group col-2">
+                <a href="#" class="list-group-item active rounded-sm">Admin</a>
+                <a href="/user/userid" class="list-group-item list-group-item-action border-0 text-primary">User</a>
+            </div>
+            <div class="col-10">
+                <h1 class="pb-2">Admin panel</h1>
+                <div class="border rounded">
+                    <!--                    aaaa-->
+                    <ul class="nav nav-tabs">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/users">Users table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/admin/user-create">New user</a>
+                        </li>
+
+                    </ul>
+                    <h4 class="p-3 m-0">Add new User</h4>
+                    <div class="col-md bg-white border">
+                        <form align="center" class="offset-md-4 col-md-3 mt-4 mb-4" th:align="center" method="post"
+                              th:action="@{/admin/user-create}" th:object="${user}">
+                            <label for="name"><b>Name</b></label>
+                            <input th:field="*{name}" th:type="text" class="form-control" id="name" placeholder="Name"
+                                   required/>
+                            <label for="email"><b>Email</b></label>
+                            <input type="text" th:field="*{email}" id="email" placeholder="Email" class="form-control" required/>
+
+                            <label for="password"><b>Password</b></label>
+                            <input type="text" th:field="*{password}" id="password" placeholder="Password" class="form-control" required/>
+
+                            <label for="roles"><b>Role</b></label>
+                            <select multiple class="form-control form-control-sm" name="roles" id="roles" size="2"
+                                    required>
+                                <option selected value="1">ADMIN</option>
+                                <option value="2">USER</option>
+                            </select>
+                            <br>
+                            <button type="submit" class="btn btn-success" value="Add new user">Add new user</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
 

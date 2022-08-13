@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 
 @Data
@@ -63,5 +64,12 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getRolesString() {
+        StringBuilder sb = new StringBuilder();
+        for (Role role : roles) { sb.append(role.getRole().substring(5));
+            sb.append(" ");}
+        return sb.toString();
     }
 }
